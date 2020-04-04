@@ -37,6 +37,8 @@ public class WifiStateReceiver extends BroadcastReceiver {
     private ConnectivityManager m_ConnManager = null;
     //private OnChangeNetworkStatusListener m_OnChangeNetworkStatusListener = null;
 
+    public WifiStateReceiver(){}
+
     public WifiStateReceiver(Context context)
     {
         this.context = context;
@@ -82,6 +84,20 @@ public class WifiStateReceiver extends BroadcastReceiver {
 
                 case WifiManager.WIFI_STATE_ENABLED:
                     //m_OnChangeNetworkStatusListener.OnChanged(WIFI_STATE_ENABLED);
+
+                    NetworkInfo networkInfo = m_ConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                    Toast t;
+
+                    if ( (networkInfo != null) && (m_WifiManager.isWifiEnabled()) ) {
+                        Log.d("isRoot", "wifi is enabled");
+                        boolean onlineFlag = checkInternet();
+
+                        if ((m_WifiManager.getConnectionInfo().getBSSID().equals("isRoot")) && onlineFlag) {
+                            t = Toast.makeText(context, "Connected", Toast.LENGTH_SHORT);
+                            t.show();
+                            //m_OnChangeNetworkStatusListener.OnChanged(NETWORK_STATE_CONNECTED);
+                        }
+                    }
                     break;
 
                 case WifiManager.WIFI_STATE_ENABLING:
@@ -94,20 +110,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
             }
         } else if (strAction.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
             Log.d("checkWifi","n s c a");
-            NetworkInfo networkInfo = m_ConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            Toast t;
-
-            if ( (networkInfo != null) && (m_WifiManager.isWifiEnabled()) ) {
-                Log.d("isRoot", "wifi is enabled");
-                boolean onlineFlag = checkInternet();
-
-                if ((m_WifiManager.getConnectionInfo().getBSSID().equals("isRoot")) && onlineFlag) {
-                    t = Toast.makeText(context, "Connected", Toast.LENGTH_SHORT);
-                    t.show();
-                    //m_OnChangeNetworkStatusListener.OnChanged(NETWORK_STATE_CONNECTED);
-                }
-            }
         }
     }
 
