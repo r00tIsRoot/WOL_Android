@@ -11,14 +11,22 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.isroot.wol_android.databinding.ActivityMainBinding;
+import com.isroot.wol_android.util.Constants;
+
+import java.util.ArrayList;
+
+import static com.isroot.wol_android.util.Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS;
 
 public class MainActivity extends AppCompatActivity {
     GeofencingClient geofencingClient;
     ActivityMainBinding binding;
     private static MainViewModel mViewModel;
+
+    private ArrayList<Geofence> geofenceList;
 
     public static MainViewModel getmViewModel() { return mViewModel; }
     public void setmViewModel() {
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         geofencingClient = LocationServices.getGeofencingClient(this);
+        geofenceList = new ArrayList<>();
     }
 
 
@@ -82,5 +91,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    private Geofence buildGeofence(String requestId, double lat, double lon, float radius){
+            return new Geofence.Builder()
+                    .setRequestId(requestId)
+                    .setCircularRegion(lat, lon, radius)
+                    .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                    .build();
     }
 }
