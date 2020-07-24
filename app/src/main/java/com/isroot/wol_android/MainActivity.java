@@ -92,13 +92,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    private Geofence buildGeofence(String requestId, double lat, double lon, float radius){
-            return new Geofence.Builder()
-                    .setRequestId(requestId)
-                    .setCircularRegion(lat, lon, radius)
-                    .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
-                    .build();
-    }
 }
